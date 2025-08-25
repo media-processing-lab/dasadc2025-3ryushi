@@ -4,7 +4,7 @@
 ## Paiza.IO 上で実行するためのファイルの生成
 ### ソースコードのminify
 ```bash
-./tools/cpp_minifier.py src/main.cpp -o minified.cpp
+./tools/cpp_minifier.py main.cpp -o minified.cpp
 ```
 
 ### バイナリのコンパイル
@@ -14,7 +14,7 @@ Paiza.IO の Python 環境 (Ubuntu 20.04, aarch64) で実行可能なバイナ�
 - docker
 
 ```bash
-./tools/g++-aarch64.sh src/main.cpp -O3 --std=c++17
+./tools/g++-aarch64.sh main.cpp -O3 --std=c++17
 ```
 
 ## 実行結果
