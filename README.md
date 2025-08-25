@@ -1,4 +1,5 @@
 # DASADC 2025 三留師チーム プログラム
+[DAシンポジウム ADC 2025 プログラミング競技](https://dasadc.github.io/adc2025/programming.html)の提出コード
 
 ## Paiza.IO 上で実行するためのファイルの生成
 ### ソースコードのminify
