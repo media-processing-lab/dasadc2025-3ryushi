@@ -1,0 +1,9 @@
+services:
+  gcc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ${PWD}:/workspace
+    working_dir: /workspace
+    command: aarch64-linux-gnu-g++ ${FLAGS}

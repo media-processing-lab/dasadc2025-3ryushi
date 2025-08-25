@@ -1,9 +1,25 @@
 # DASADC 2025 三留師チーム プログラム
 
+## Paiza.IO 上で実行するためのファイルの生成
+### ソースコードのminify
+```bash
+./tools/cpp_minifier.py src/main.cpp -o minified.cpp
+```
+
+### バイナリのコンパイル
+Paiza.IO の Python 環境 (Ubuntu 20.04, aarch64) で実行可能なバイナリを生成する
+
+#### 前提条件
+- docker
+
+```bash
+./tools/g++-aarch64.sh src/main.cpp -O3 --std=c++17
+```
+
 ## 実行結果
 |盤面データ|実行時間|スコア|Paiza.IO|
 |:-:|:-:|:-:|:-:|
 |1210_both_dangerous|0.51 s|168,732|[Link↗](https://paiza.io/projects/4KNdhAuXG0btu4KtwJpgIQ)|
 |8516_both_middle|2.00 s|837,881<sup>*1</sup>|[Link↗](https://paiza.io/projects/8tkIim70mUrI-UIyjmtlzQ)|
 
-*1: 盤面データパックがPaiza.IOの入力ファイル制限に引っかかるので、外部サーバーに配置。Pythonスクリプトでダウンロードしてバイナリを実行した。
+*1: 盤面データパックが Paiza.IO の入力ファイル制限に引っかかるので、外部サーバーに配置。Python スクリプトでダウンロードしてバイナリを実行
