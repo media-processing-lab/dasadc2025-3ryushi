@@ -3,16 +3,22 @@
 #include <sstream>
 #include <vector>
 #include <functional>
-#include <unordered_set>
 #include <array>
-#include <stack>
 #include <set>
 #include <cassert>
 #include <cstdint>
-#include <queue>
 #include <limits>
 
 #include "pattern.h"
+
+// 安全セルの配置モード
+#define CORNER 1
+#define CENTER 2
+#define BOTH 3
+
+#ifndef MODE
+#define MODE BOTH
+#endif
 
 constexpr std::pair<int, int> neighbors[] = {
     {-1, -1}, {-1, 0}, {-1, 1},
@@ -59,11 +65,16 @@ struct Solver {
     int w, h;
     std::vector<std::vector<int>> board;
 
+    /* セルが開いているかどうか */
     std::vector<std::vector<bool>> opened;
+
+    /* セルの探索状態（未確定、安全、地雷）*/
     std::vector<std::vector<SearchState>> state;
 
+    /* 評価が必要なセルの集合。状態が確定したセルの隣接セルなど*/
     std::set<std::pair<int, int>> cells_to_evaluate;
 
+    /* 各セルに対しての残存パターンの集合 */
     std::vector<std::vector<std::set<PatternReference>>> remaining_pattern;
 
     Solver(std::vector<std::vector<int>> &board, int w, int h):
@@ -401,6 +412,11 @@ struct Solver {
         return pattern_removed; // 何かパターンが削除された場合はtrue
     }
 
+    /**
+     * @brief 未確定セルの数をカウントする
+     * 
+     * @return int 未確定セルの数
+     */
     int count_undetermined_cells() const {
         int count = 0;
         for (int r = 0; r < h; ++r) {
@@ -413,6 +429,12 @@ struct Solver {
         return count;
     }
 
+    /**
+     * @brief 確率的選択
+     * 
+     * @return true セルを開けた
+     * @return false セルを開けなかった
+     */
     bool destiny_flip() {
         // 地雷確率が最小のセルを探す
         double min_probability = std::numeric_limits<double>::max();
@@ -444,8 +466,7 @@ struct Solver {
             }
         }
 
-        if (min_probability<1 && (count_undetermined_cells()*4 -20 * min_probability > 0)) {
-            // std::cerr << "Destiny flip: " << best_cell.second << " " << best_cell.first << "\n";
+        if (min_probability < 1 && (count_undetermined_cells() * 4 - 20 * min_probability > 0)) {
             auto [r, c] = best_cell;
             confirm_to_be_safe(r, c);
             return true;
@@ -456,15 +477,6 @@ struct Solver {
 
     void solve() {
         std::vector<std::pair<int, int>> first_to_open;
-
-// モードの定義
-#define CORNER 1
-#define CENTER 2
-#define BOTH 3
-
-#ifndef MODE
-#define MODE BOTH
-#endif
 
 #if MODE == CORNER || MODE == BOTH
         // 四隅をあける
@@ -486,13 +498,16 @@ struct Solver {
         }
 
         while (!cells_to_evaluate.empty()) {
+            // 簡易パターン決定
             simple_algorithm();
 
+            // 再帰パターン決定
             bool pattern_removed;
             do {
                 pattern_removed = recursive_algorithm();
             } while (pattern_removed && cells_to_evaluate.empty());
 
+            // 確率的選択
             if (!pattern_removed && cells_to_evaluate.empty()) {
                 destiny_flip();
             }
