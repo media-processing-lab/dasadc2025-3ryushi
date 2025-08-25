@@ -10,8 +10,7 @@
 ### バイナリのコンパイル
 Paiza.IO の Python 環境 (Ubuntu 20.04, aarch64) で実行可能なバイナリを生成する
 
-#### 前提条件
-- docker
+Docker のインストールが必要
 
 ```bash
 ./tools/g++-aarch64.sh main.cpp -O3 --std=c++17
