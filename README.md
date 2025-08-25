@@ -3,6 +3,9 @@
 
 ## 実行用ファイルの生成
 ### ソースコードのminify
+
+Paiza.IOはプロジェクトの合計テキストサイズに制限がある。ソースコードのスペースや改行を削除することで、盤面サイズを最大化する。
+
 ```bash
 ./tools/cpp_minifier.py main.cpp -o minified.cpp
 ```
